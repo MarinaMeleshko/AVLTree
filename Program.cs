@@ -15,9 +15,12 @@ namespace ADS
             tree = Node<int>.Insert(tree, 13);
             tree = Node<int>.Insert(tree, 78);
             tree = Node<int>.Insert(tree, 10);
+            tree = Node<int>.Insert(tree, 1);
+            tree = Node<int>.Insert(tree, 11);
+            tree = Node<int>.Insert(tree, 9);
             tree.Print();
-            tree = Node<int>.Remove(tree, 13);
-            Console.WriteLine("Removed 13:");
+            tree = Node<int>.Remove(tree, 8);
+            Console.WriteLine("Removed 8:");
             tree.Print();
             Console.ReadKey();
         }
