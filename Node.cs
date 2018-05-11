@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace ADS
 {
@@ -109,13 +110,13 @@ namespace ADS
                 node.Right = Remove(node.Right, key);
             }
             if (key.CompareTo(node.Key) != 0) return Balance(node);
-            var q = node.Left;
+            var l = node.Left;
             var r = node.Right;
             node = null;
-            if (r == null) return q;
+            if (r == null) return l;
             var min = FindMin(r);
             min.Right = RemoveMin(r);
-            min.Left = q;
+            min.Left = l;
             return Balance(min);
         }
 
@@ -133,6 +134,60 @@ namespace ADS
             return node;
         }
 
+        private static Node<T> FindFirstMin(Node<T> node, Node<T> firstmin, T key)
+        {
+            if (node == null) return null;
+            if (key.CompareTo(node.Key) < 0)
+            {                
+                return FindFirstMin(node.Left, firstmin, key);
+            }
+            if (key.CompareTo(node.Key) > 0)
+            {
+                firstmin = node;
+                return FindFirstMin(node.Right, firstmin, key);
+            }
+            return firstmin;
+        }
+
+        private static Node<T> FindFirstMax(Node<T> node, Node<T> firstmax, T key)
+        {
+            if (node == null) return null;
+            if (key.CompareTo(node.Key) < 0)
+            {
+                firstmax = node;
+                return FindFirstMax(node.Left, firstmax, key);
+            }
+            if (key.CompareTo(node.Key) > 0)
+            {
+                return FindFirstMax(node.Right, firstmax, key);
+            }
+            return firstmax;
+        }
+
+        public static Node<T> Predecessor(Node<T> root, Node<T> node)
+        {
+            if (node.Left != null)
+            {
+                var pred = node.Left;
+                while (pred.Right != null)
+                    pred = pred.Right;
+                return pred;
+            }
+            return FindFirstMin(root, null, node.Key);
+        }
+
+        public static Node<T> Successor(Node<T> root, Node<T> node)
+        {
+            if (node.Right != null)
+            {
+                var succ = node.Right;
+                while (succ.Left != null)
+                    succ = succ.Left;
+                return succ;
+            }
+            return FindFirstMax(root, null, node.Key);
+        }
+
         private static void Print(Node<T> node, int padding)
         {
             if (node == null) return;
@@ -146,13 +201,13 @@ namespace ADS
             }
             if (node.Right != null)
             {
-                Console.Write("/\n");
+                Console.WriteLine("/");
                 Console.Write(" ".PadLeft(padding));
             }
-            Console.Write(node.Key + "\n ");
+            Console.WriteLine(node.Key);
             if (node.Left != null)
             {
-                Console.Write(" ".PadLeft(padding) + "\\\n");
+                Console.WriteLine(" ".PadLeft(padding) + "\\");
                 Print(node.Left, padding + 4);
             }
         }
